@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-luggage.jpg";
@@ -19,7 +20,7 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-2xl">
           <span className="inline-block mb-4 font-sans text-sm uppercase tracking-widest text-gold-light animate-fade-in">
-            Premium Collection 2024
+            Premium Collection 2026
           </span>
           <h1 className="font-display text-4xl md:text-5xl lg:text-7xl font-bold text-primary-foreground leading-tight mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
             Travel in
@@ -30,13 +31,17 @@ const Hero = () => {
             Quality that lasts a lifetime.
           </p>
           <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <Button size="lg" variant="hero">
-              Shop Collection
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button size="lg" variant="heroOutline">
-              View Bestsellers
-            </Button>
+            <Link to="/shop">
+              <Button size="lg" variant="hero">
+                Shop Collection
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/shop?bestsellers=true">
+              <Button size="lg" variant="heroOutline">
+                View Bestsellers
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
