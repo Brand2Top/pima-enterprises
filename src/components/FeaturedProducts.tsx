@@ -1,53 +1,9 @@
+import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import briefcaseImg from "@/assets/product-briefcase.jpg";
-import suitcaseImg from "@/assets/product-suitcase.jpg";
-import laptopBagImg from "@/assets/product-laptop-bag.jpg";
-import duffleImg from "@/assets/product-duffle.jpg";
-import backpackImg from "@/assets/product-backpack.jpg";
+import { products } from "@/data/products";
 
 const FeaturedProducts = () => {
-  const products = [
-    {
-      name: "Executive Leather Briefcase",
-      price: 12999,
-      image: briefcaseImg,
-      category: "Briefcases",
-      isNew: true,
-    },
-    {
-      name: "Voyager Hardshell Suitcase",
-      price: 18499,
-      originalPrice: 22999,
-      image: suitcaseImg,
-      category: "Suitcases",
-    },
-    {
-      name: "Cambridge Laptop Bag",
-      price: 8999,
-      image: laptopBagImg,
-      category: "Laptop Bags",
-      isNew: true,
-    },
-    {
-      name: "Heritage Weekender Duffle",
-      price: 15999,
-      image: duffleImg,
-      category: "Travel Bags",
-    },
-    {
-      name: "Urban Pro Backpack",
-      price: 9499,
-      originalPrice: 11999,
-      image: backpackImg,
-      category: "Backpacks",
-    },
-    {
-      name: "Classic Leather Satchel",
-      price: 7999,
-      image: laptopBagImg,
-      category: "Laptop Bags",
-    },
-  ];
+  const featuredProducts = products.slice(0, 6);
 
   return (
     <section id="shop" className="py-20 md:py-28 bg-secondary/30">
@@ -61,17 +17,17 @@ const FeaturedProducts = () => {
               Featured Products
             </h2>
           </div>
-          <a
-            href="#all-products"
+          <Link
+            to="/shop"
             className="mt-4 md:mt-0 font-sans text-sm font-medium text-foreground underline underline-offset-4 hover:text-accent transition-colors"
           >
             View All Products →
-          </a>
+          </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-          {products.map((product, index) => (
+          {featuredProducts.map((product, index) => (
             <div
-              key={product.name}
+              key={product.id}
               className="animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >

@@ -1,7 +1,10 @@
 import { ShoppingBag, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
+  id: string;
   name: string;
   price: number;
   originalPrice?: number;
@@ -11,6 +14,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({
+  id,
   name,
   price,
   originalPrice,
@@ -18,6 +22,17 @@ const ProductCard = ({
   category,
   isNew,
 }: ProductCardProps) => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  const handleAddToCart = () => {
+    addToCart({ id, name, price, image, category });
+    toast({
+      title: "Added to Cart",
+      description: `${name} has been added to your cart.`,
+    });
+  };
+
   return (
     <div className="group">
       <div className="relative overflow-hidden rounded-lg bg-secondary/50 aspect-square mb-4">
@@ -44,7 +59,7 @@ const ProductCard = ({
           </Button>
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <Button className="w-full" variant="default">
+          <Button className="w-full" variant="default" onClick={handleAddToCart}>
             <ShoppingBag className="mr-2 h-4 w-4" />
             Add to Cart
           </Button>
@@ -59,11 +74,11 @@ const ProductCard = ({
         </h3>
         <div className="flex items-center gap-2">
           <span className="font-sans font-semibold text-foreground">
-            ₹{price.toLocaleString()}
+            PKR {price.toLocaleString()}
           </span>
           {originalPrice && (
             <span className="font-sans text-sm text-muted-foreground line-through">
-              ₹{originalPrice.toLocaleString()}
+              PKR {originalPrice.toLocaleString()}
             </span>
           )}
         </div>

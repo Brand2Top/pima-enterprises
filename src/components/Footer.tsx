@@ -1,6 +1,15 @@
+import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, MapPin, Phone, Mail } from "lucide-react";
 
 const Footer = () => {
+  const quickLinks = [
+    { name: "Shop All", href: "/shop" },
+    { name: "Suitcases", href: "/shop?category=Suitcases" },
+    { name: "Briefcases", href: "/shop?category=Briefcases" },
+    { name: "Backpacks", href: "/shop?category=Backpacks" },
+    { name: "Travel Bags", href: "/shop?category=Travel Bags" },
+  ];
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-16">
@@ -30,11 +39,11 @@ const Footer = () => {
           <div>
             <h4 className="font-sans font-semibold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              {["Shop All", "Suitcases", "Briefcases", "Backpacks", "Travel Bags"].map((link) => (
-                <li key={link}>
-                  <a href="#" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
-                    {link}
-                  </a>
+              {quickLinks.map((link) => (
+                <li key={link.name}>
+                  <Link to={link.href} className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
+                    {link.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -61,19 +70,19 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-gold shrink-0 mt-0.5" />
                 <span className="font-sans text-sm text-primary-foreground/70">
-                  123 Business District,<br />Mumbai, Maharashtra 400001
+                  123 Business District,<br />Karachi, Pakistan 75500
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-gold shrink-0" />
-                <a href="tel:+919876543210" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
-                  +91 98765 43210
+                <a href="tel:+923001234567" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
+                  +92 300 1234567
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-gold shrink-0" />
-                <a href="mailto:hello@pima.in" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
-                  hello@pima.in
+                <a href="mailto:hello@pima.pk" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
+                  hello@pima.pk
                 </a>
               </li>
             </ul>
@@ -86,7 +95,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="font-sans text-sm text-primary-foreground/50">
-              © 2024 PIMA Enterprises. All rights reserved.
+              © 2026 PIMA Enterprises. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="font-sans text-sm text-primary-foreground/50 hover:text-primary-foreground transition-colors">

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface CategoryCardProps {
   title: string;
   image: string;
@@ -6,9 +8,9 @@ interface CategoryCardProps {
 
 const CategoryCard = ({ title, image, count }: CategoryCardProps) => {
   return (
-    <a
-      href={`#${title.toLowerCase()}`}
-      className="group relative overflow-hidden rounded-lg aspect-[4/5] cursor-pointer"
+    <Link
+      to={`/shop?category=${encodeURIComponent(title)}`}
+      className="group relative overflow-hidden rounded-lg aspect-[4/5] cursor-pointer block"
     >
       <img
         src={image}
@@ -25,7 +27,7 @@ const CategoryCard = ({ title, image, count }: CategoryCardProps) => {
         </p>
       </div>
       <div className="absolute inset-0 border-2 border-transparent group-hover:border-accent/50 rounded-lg transition-colors duration-300" />
-    </a>
+    </Link>
   );
 };
 
