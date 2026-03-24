@@ -50,12 +50,19 @@ const Checkout = () => {
 
       const response = await submitCheckout(payload);
 
+      const stateToPass = {
+        orderId: response?.order_id || '',
+        customer: payload.customer,
+        items: items.map(i => ({ ...i })),
+        totalPrice: totalPrice,
+      };
+
       clearCart();
       toast({
         title: "Order Placed Successfully!",
         description: "Thank you for your order. We will contact you shortly.",
       });
-      navigate(`/order-success?order_id=${response?.order_id || ''}`);
+      navigate(`/order-success?order_id=${response?.order_id || ''}`, { state: stateToPass });
     } catch (error: any) {
       toast({
         title: "Failed to place order",
