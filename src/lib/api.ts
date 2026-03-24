@@ -25,6 +25,33 @@ export interface Product {
   category: any;
   isNew?: boolean;
   isBestseller?: boolean;
+  slug?: string;
+}
+
+export interface DetailedProduct {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  discounted_price: number | null;
+  stock: number;
+  is_active: boolean;
+  is_featured: boolean;
+  category: {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+  };
+  featured_image: {
+    id: number;
+    url: string;
+  };
+  gallery: Array<{
+    id: number;
+    url: string;
+  }>;
 }
 
 export interface CheckoutPayload {
@@ -47,6 +74,11 @@ export const getCategories = async (): Promise<Category[]> => {
 
 export const getProducts = async (): Promise<Product[]> => {
   const response = await api.get('/products');
+  return response.data?.data || response.data;
+};
+
+export const getProduct = async (identifier: string): Promise<DetailedProduct> => {
+  const response = await api.get(`/products/${identifier}`);
   return response.data?.data || response.data;
 };
 

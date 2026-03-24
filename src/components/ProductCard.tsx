@@ -1,4 +1,5 @@
 import { ShoppingBag, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
@@ -6,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 interface ProductCardProps {
   id: string | number;
   name: string;
+  slug?: string;
   price: number;
   originalPrice?: number;
   discounted_price?: number;
@@ -18,6 +20,7 @@ interface ProductCardProps {
 const ProductCard = ({
   id,
   name,
+  slug,
   price,
   originalPrice,
   discounted_price,
@@ -48,11 +51,13 @@ const ProductCard = ({
   return (
     <div className="group">
       <div className="relative overflow-hidden rounded-lg bg-secondary/50 aspect-square mb-4">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        <Link to={`/product/${slug || id}`}>
+          <img
+            src={image}
+            alt={name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </Link>
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
           {isOutOfStock && (
@@ -93,9 +98,11 @@ const ProductCard = ({
         <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-1">
           {categoryName}
         </p>
-        <h3 className="font-sans font-medium text-foreground mb-2 group-hover:text-accent transition-colors">
-          {name}
-        </h3>
+        <Link to={`/product/${slug || id}`}>
+          <h3 className="font-sans font-medium text-foreground mb-2 group-hover:text-accent transition-colors">
+            {name}
+          </h3>
+        </Link>
         <div className="flex items-center gap-2">
           <span className="font-sans font-semibold text-foreground">
             PKR {displayPrice?.toLocaleString()}
