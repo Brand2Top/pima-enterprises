@@ -24,8 +24,8 @@ const Header = () => {
 
   const navLinks = [
     { name: "Shop All", href: "/shop" },
-    ...(apiCategories && apiCategories.length > 0 ? dynamicNavLinks : [
-    ])
+    ...(apiCategories && apiCategories.length > 0 ? dynamicNavLinks : []),
+    { name: "FAQ", href: "/faq" }
   ];
 
   return (

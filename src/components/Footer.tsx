@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, MapPin, Phone, Mail } from "lucide-react";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/lib/api";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
@@ -10,13 +12,16 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 
 const Footer = () => {
   const { settings } = useSettings();
-  const quickLinks = [
-    { name: "Shop All", href: "/shop" },
-    { name: "Suitcases", href: "/shop?category=Suitcases" },
-    { name: "Briefcases", href: "/shop?category=Briefcases" },
-    { name: "Backpacks", href: "/shop?category=Backpacks" },
-    { name: "Travel Bags", href: "/shop?category=Travel Bags" },
-  ];
+  
+  const { data: apiCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories
+  });
+
+  const categoryLinks = apiCategories?.map(c => ({
+    name: c.name,
+    href: `/shop?category=${encodeURIComponent(c.name)}`
+  })) || [];
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -53,11 +58,16 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Categories */}
           <div>
-            <h4 className="font-sans font-semibold text-lg mb-4">Quick Links</h4>
+            <h4 className="font-sans font-semibold text-lg mb-4">Categories</h4>
             <ul className="space-y-3">
-              {quickLinks.map((link) => (
+              <li>
+                <Link to="/shop" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
+                  Shop All
+                </Link>
+              </li>
+              {categoryLinks.map((link) => (
                 <li key={link.name}>
                   <Link to={link.href} className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
                     {link.name}
@@ -73,9 +83,9 @@ const Footer = () => {
             <ul className="space-y-3">
               {["Track Order", "Returns & Exchanges", "Shipping Info", "FAQs", "Size Guide"].map((link) => (
                 <li key={link}>
-                  <a href="#" className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
+                  <Link to={link === "FAQs" ? "/faq" : "#"} className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
                     {link}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

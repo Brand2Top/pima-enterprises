@@ -68,6 +68,24 @@ export interface CheckoutPayload {
   }>;
 }
 
+export interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+  is_active?: boolean;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  featured_image: string;
+  is_published?: boolean;
+  published_at?: string;
+}
+
 export const getCategories = async (): Promise<Category[]> => {
   const response = await api.get('/categories');
   return response.data?.data || response.data;
@@ -86,6 +104,21 @@ export const getProduct = async (identifier: string): Promise<DetailedProduct> =
 export const submitCheckout = async (payload: CheckoutPayload): Promise<any> => {
   const response = await api.post('/checkout', payload);
   return response.data;
+};
+
+export const getFaqs = async (): Promise<Faq[]> => {
+  const res = await api.get('/faqs');
+  return res.data?.data || res.data;
+};
+
+export const getPosts = async (): Promise<Post[]> => {
+  const res = await api.get('/posts');
+  return res.data?.data || res.data;
+};
+
+export const getPostBySlug = async (slug: string): Promise<Post> => {
+  const res = await api.get('/posts/' + slug);
+  return res.data?.data || res.data;
 };
 
 export default api;
