@@ -8,13 +8,28 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { useSettings } from "@/contexts/SettingsContext";
 import { submitCheckout } from "@/lib/api";
 
 const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const { toast } = useToast();
+  const { settings } = useSettings();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Parse shipping options from settings
+  const shippingOptions = [
+    { id: 'standard', name: 'Standard Delivery', cost: Number(settings?.delivery_cost_standard) },
+    { id: 'fast', name: 'Fast Delivery', cost: Number(settings?.delivery_cost_fast) },
+    { id: 'sameday', name: 'Same Day Delivery', cost: Number(settings?.delivery_cost_sameday) }
+  ].filter(option => option.cost > 0);
+
+  const [selectedShipping, setSelectedShipping] = useState(shippingOptions[0]?.id || 'standard');
+  const activeShippingCost = shippingOptions.find(o => o.id === selectedShipping)?.cost || 0;
+  const activeShippingName = shippingOptions.find(o => o.id === selectedShipping)?.name || 'Standard Delivery';
+
+  const finalTotal = totalPrice + activeShippingCost;
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -45,7 +60,9 @@ const Checkout = () => {
         items: items.map(item => ({
           product_id: Number(item.id),
           quantity: item.quantity
-        }))
+        })),
+        shipping_method: activeShippingName,
+        shipping_cost: activeShippingCost
       };
 
       const response = await submitCheckout(payload);
@@ -55,6 +72,9 @@ const Checkout = () => {
         customer: payload.customer,
         items: items.map(i => ({ ...i })),
         totalPrice: totalPrice,
+        shippingCost: activeShippingCost,
+        shippingMethod: activeShippingName,
+        grandTotal: finalTotal
       };
 
       clearCart();
@@ -187,13 +207,15 @@ const Checkout = () => {
                   </span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="font-sans text-muted-foreground">Shipping</span>
-                  <span className="font-sans font-medium text-accent">Free</span>
+                  <span className="font-sans text-muted-foreground">Shipping ({activeShippingName})</span>
+                  <span className="font-sans font-medium text-foreground">
+                    PKR {activeShippingCost.toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between pt-4 border-t border-border">
                   <span className="font-sans font-semibold text-lg">Total</span>
                   <span className="font-sans font-bold text-lg">
-                    PKR {totalPrice.toLocaleString()}
+                    PKR {finalTotal.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -280,6 +302,35 @@ const Checkout = () => {
                       onChange={handleInputChange}
                       required
                     />
+                  </div>
+                </div>
+
+                <div className="pt-6">
+                  <h3 className="font-sans font-semibold text-foreground mb-4">Delivery Method</h3>
+                  <div className="space-y-3">
+                    {shippingOptions.map((option) => (
+                      <div 
+                        key={option.id}
+                        onClick={() => setSelectedShipping(option.id)}
+                        className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 flex justify-between items-center ${
+                          selectedShipping === option.id 
+                            ? 'border-accent bg-accent/5 ring-1 ring-accent' 
+                            : 'border-border/50 hover:border-border'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                            selectedShipping === option.id ? 'border-accent' : 'border-muted-foreground'
+                          }`}>
+                            {selectedShipping === option.id && <div className="w-2.5 h-2.5 rounded-full bg-accent" />}
+                          </div>
+                          <div>
+                            <p className="font-sans font-medium text-foreground">{option.name}</p>
+                          </div>
+                        </div>
+                        <p className="font-sans font-semibold text-foreground">PKR {option.cost.toLocaleString()}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 

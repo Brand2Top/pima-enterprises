@@ -151,12 +151,12 @@ const OrderSuccess = () => {
                                                 <span className="font-medium text-foreground">PKR {Number(orderDetails.totalPrice)?.toLocaleString()}</span>
                                             </div>
                                             <div className="flex justify-between text-sm pb-3 border-b border-border">
-                                                <span className="text-muted-foreground">Shipping (Standard)</span>
-                                                <span className="font-medium text-emerald-600">Free</span>
+                                                <span className="text-muted-foreground">Shipping ({orderDetails.shippingMethod || 'Standard'})</span>
+                                                <span className="font-medium text-foreground">PKR {Number(orderDetails.shippingCost || 0).toLocaleString()}</span>
                                             </div>
                                             <div className="flex justify-between items-center pt-1">
                                                 <span className="font-semibold text-lg text-foreground">Total</span>
-                                                <span className="font-bold text-xl text-foreground">PKR {Number(orderDetails.totalPrice)?.toLocaleString()}</span>
+                                                <span className="font-bold text-xl text-foreground">PKR {Number(orderDetails.grandTotal || orderDetails.totalPrice).toLocaleString()}</span>
                                             </div>
                                         </div>
                                     </div>

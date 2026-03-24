@@ -66,6 +66,8 @@ export interface CheckoutPayload {
     product_id: number;
     quantity: number;
   }>;
+  shipping_method?: string;
+  shipping_cost?: number;
 }
 
 export interface Faq {
