@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import DOMPurify from 'dompurify';
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Share2, Printer, ChevronRight, Bookmark } from "lucide-react";
+import { ArrowLeft, Calendar, Share2, Printer, ChevronRight } from "lucide-react";
+import { formatDistanceToNow } from 'date-fns';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getPostBySlug } from "@/lib/api";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { toast } = useToast();
 
   const { data: post, isLoading, isError } = useQuery({
     queryKey: ['post', slug],
@@ -17,8 +20,16 @@ const BlogPost = () => {
   });
 
   const formattedDate = post?.published_at
-    ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    ? formatDistanceToNow(new Date(post.published_at), { addSuffix: true })
     : 'Recently Published';
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast({
+      title: "Link Copied",
+      description: "Blog link has been copied to your clipboard.",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -87,10 +98,6 @@ const BlogPost = () => {
                   <Calendar className="h-4 w-4 text-accent" />
                   {formattedDate}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Bookmark className="h-4 w-4 text-accent" />
-                  Journal Story
-                </div>
               </div>
 
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-10 leading-[1.15] tracking-tight animate-fade-in">
@@ -106,23 +113,7 @@ const BlogPost = () => {
                 />
               </div>
 
-              {/* Action Toolbar */}
-              <div className="flex items-center justify-between py-6 border-y border-border/50 mb-12">
-                <div className="flex items-center gap-6">
-                  <Link to="/blog" className="flex items-center gap-2 text-sm font-semibold hover:text-accent transition-colors">
-                    <ArrowLeft className="h-4 w-4" />
-                    Back to Stories
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 hover:bg-secondary/50">
-                    <Share2 className="h-4 w-4" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 hover:bg-secondary/50" onClick={() => window.print()}>
-                    <Printer className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
+              {/* Action Toolbar Removed */}
             </header>
 
             {/* Post Content */}
@@ -135,26 +126,32 @@ const BlogPost = () => {
                 prose-img:rounded-xl prose-img:border prose-img:border-border/50
                 prose-blockquote:border-accent prose-blockquote:bg-accent/5 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:font-sans prose-blockquote:italic
                 selection:bg-accent/20 animate-fade-in"
-              dangerouslySetInnerHTML={{ 
-                __html: DOMPurify.sanitize(post.content) 
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.content)
               }}
             />
 
-            {/* Footer Navigation */}
             <footer className="mt-20 pt-10 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-6">
               <Link to="/blog">
                 <Button variant="outline" className="rounded-full shadow-sm hover:translate-y-[-2px] transition-transform">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Return to Blog
+                  Return to Blogs
                 </Button>
               </Link>
 
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-muted-foreground mr-2">Share this story:</span>
-                <div className="flex gap-2">
-                  {['fb', 'tw', 'ln'].map(s => (
-                    <div key={s} className="w-8 h-8 rounded-full bg-secondary/50 border border-border/30 hover:bg-accent hover:border-accent hover:text-white transition-all cursor-pointer"></div>
-                  ))}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-10 w-10 shrink-0 border border-border/30 hover:bg-secondary/50"
+                    onClick={handleShare}
+                  >
+                    <Share2 className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 border border-border/30 hover:bg-secondary/50" onClick={() => window.print()}>
+                    <Printer className="h-4 w-4 text-muted-foreground" />
+                  </Button>
                 </div>
               </div>
             </footer>

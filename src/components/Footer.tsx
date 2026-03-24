@@ -81,10 +81,10 @@ const Footer = () => {
           <div>
             <h4 className="font-sans font-semibold text-lg mb-4">Customer Service</h4>
             <ul className="space-y-3">
-              {["Track Order", "Returns & Exchanges", "Shipping Info", "FAQs", "Blog", "Size Guide"].map((link) => (
+              {["FAQs", "Blog"].map((link) => (
                 <li key={link}>
                   <Link 
-                    to={link === "FAQs" ? "/faq" : link === "Blog" ? "/blog" : "#"} 
+                    to={link === "FAQs" ? "/faq" : "/blog"} 
                     className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors"
                   >
                     {link}
@@ -121,24 +121,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-primary-foreground/10">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="font-sans text-sm text-primary-foreground/50">
-              © {new Date().getFullYear()} {settings?.site_name || "PIMA Enterprises"}. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <a href="#" className="font-sans text-sm text-primary-foreground/50 hover:text-primary-foreground transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="font-sans text-sm text-primary-foreground/50 hover:text-primary-foreground transition-colors">
-                Terms of Service
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Bottom Bar Removed */}
     </footer>
   );
 };
