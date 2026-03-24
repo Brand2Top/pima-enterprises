@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useSettings } from "@/contexts/SettingsContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { totalItems } = useCart();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   const navLinks = [
@@ -23,11 +25,14 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
+            {settings?.site_logo && (
+              <img src={settings.site_logo} alt={settings.site_name || "Logo"} className="h-8 md:h-10 w-auto object-contain rounded" />
+            )}
             <span className="font-display text-xl md:text-2xl font-bold tracking-tight text-foreground">
-              PIMA
+              {settings?.site_name ? settings.site_name.split(' ')[0] : 'PIMA'}
             </span>
             <span className="hidden sm:inline font-sans text-xs uppercase tracking-widest text-muted-foreground">
-              Enterprises
+              {settings?.site_name && settings.site_name.includes(' ') ? settings.site_name.substring(settings.site_name.indexOf(' ') + 1) : 'Enterprises'}
             </span>
           </Link>
 
@@ -46,9 +51,9 @@ const Header = () => {
 
           {/* Right Icons */}
           <div className="flex items-center gap-2 md:gap-4">
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="relative"
               onClick={() => navigate("/checkout")}
             >

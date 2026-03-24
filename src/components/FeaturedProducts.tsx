@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { products } from "@/data/products";
+import { useSettings } from "@/contexts/SettingsContext";
 
 const FeaturedProducts = () => {
+  const { settings } = useSettings();
   const featuredProducts = products.slice(0, 6);
 
   return (
@@ -11,10 +13,10 @@ const FeaturedProducts = () => {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 md:mb-16">
           <div>
             <span className="inline-block mb-3 font-sans text-sm uppercase tracking-widest text-accent">
-              Best Sellers
+              {settings?.featured_collection_description || "Best Sellers"}
             </span>
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              Featured Products
+              {settings?.featured_collection_title || "Featured Products"}
             </h2>
           </div>
           <Link
