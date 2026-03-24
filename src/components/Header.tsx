@@ -4,6 +4,8 @@ import { ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/lib/api";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,12 +13,19 @@ const Header = () => {
   const { settings } = useSettings();
   const navigate = useNavigate();
 
+  const { data: apiCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories
+  });
+
+  const dynamicNavLinks = apiCategories
+    ? apiCategories.map(c => ({ name: c.name, href: `/shop?category=${encodeURIComponent(c.name)}` }))
+    : [];
+
   const navLinks = [
     { name: "Shop All", href: "/shop" },
-    { name: "Suitcases", href: "/shop?category=Suitcases" },
-    { name: "Briefcases", href: "/shop?category=Briefcases" },
-    { name: "Backpacks", href: "/shop?category=Backpacks" },
-    { name: "Travel Bags", href: "/shop?category=Travel Bags" },
+    ...(apiCategories && apiCategories.length > 0 ? dynamicNavLinks : [
+    ])
   ];
 
   return (

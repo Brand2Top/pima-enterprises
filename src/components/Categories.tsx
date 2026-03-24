@@ -4,15 +4,25 @@ import suitcaseImg from "@/assets/product-suitcase.jpg";
 import laptopBagImg from "@/assets/product-laptop-bag.jpg";
 import duffleImg from "@/assets/product-duffle.jpg";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/lib/api";
 
 const Categories = () => {
   const { settings } = useSettings();
-  const categories = [
-    { title: "Suitcases", image: suitcaseImg, count: 24 },
-    { title: "Briefcases", image: briefcaseImg, count: 18 },
-    { title: "Laptop Bags", image: laptopBagImg, count: 15 },
-    { title: "Travel Bags", image: duffleImg, count: 21 },
-  ];
+  const { data: apiCategories, isLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories
+  });
+
+  const defaultCategories = [];
+
+  const displayCategories = apiCategories && apiCategories.length > 0
+    ? apiCategories.map(c => ({
+      title: c.name,
+      image: c.image || suitcaseImg,
+      count: c.products_count || 0
+    }))
+    : defaultCategories;
 
   return (
     <section className="py-20 md:py-28 bg-background">
@@ -26,7 +36,7 @@ const Categories = () => {
           </h2>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {categories.map((category, index) => (
+          {displayCategories.map((category, index) => (
             <div
               key={category.title}
               className="animate-fade-in"

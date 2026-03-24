@@ -3,9 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products, categories } from "@/data/products";
+import { products, categories as localCategories } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/lib/api";
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,6 +20,15 @@ const Shop = () => {
   const [showBestsellers, setShowBestsellers] = useState(
     bestsellersParam === "true"
   );
+
+  const { data: apiCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories
+  });
+
+  const categoryList = apiCategories && apiCategories.length > 0
+    ? apiCategories.map(c => c.name)
+    : [];
 
   const filteredProducts = useMemo(() => {
     let filtered = products;
@@ -71,8 +82,8 @@ const Shop = () => {
               {showBestsellers
                 ? "Bestsellers"
                 : selectedCategory
-                ? selectedCategory
-                : "Shop All"}
+                  ? selectedCategory
+                  : "Shop All"}
             </h1>
             <p className="font-sans text-muted-foreground text-center mt-4 max-w-2xl mx-auto">
               Discover our premium collection of handcrafted bags and luggage
@@ -101,7 +112,7 @@ const Shop = () => {
               >
                 Bestsellers
               </Button>
-              {categories.map((category) => (
+              {categoryList.map((category) => (
                 <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
