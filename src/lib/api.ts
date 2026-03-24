@@ -81,7 +81,10 @@ export interface Post {
   slug: string;
   excerpt?: string;
   content: string;
-  featured_image: string;
+  featured_image: {
+    id: number;
+    url: string;
+  };
   is_published?: boolean;
   published_at?: string;
 }

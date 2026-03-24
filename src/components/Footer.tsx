@@ -81,9 +81,12 @@ const Footer = () => {
           <div>
             <h4 className="font-sans font-semibold text-lg mb-4">Customer Service</h4>
             <ul className="space-y-3">
-              {["Track Order", "Returns & Exchanges", "Shipping Info", "FAQs", "Size Guide"].map((link) => (
+              {["Track Order", "Returns & Exchanges", "Shipping Info", "FAQs", "Blog", "Size Guide"].map((link) => (
                 <li key={link}>
-                  <Link to={link === "FAQs" ? "/faq" : "#"} className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors">
+                  <Link 
+                    to={link === "FAQs" ? "/faq" : link === "Blog" ? "/blog" : "#"} 
+                    className="font-sans text-sm text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     {link}
                   </Link>
                 </li>
