@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, Minus, Plus, ShoppingBag, Heart, Truck, Shield } from "lucide-react";
+import { ChevronRight, Minus, Plus, ShoppingBag, Truck, Shield } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";

@@ -164,7 +164,7 @@ const Shop = () => {
                       className="animate-fade-in"
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
-                      <ProductCard {...product} />
+                      <ProductCard {...product} image={product.featured_image?.url || product.image || ""} />
                     </div>
                   ))}
                 </div>

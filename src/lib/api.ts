@@ -11,7 +11,7 @@ export interface Category {
   id: number | string;
   name: string;
   slug: string;
-  image?: string;
+  image?: { id: number; url: string } | string | null;
   products_count?: number;
 }
 
@@ -21,7 +21,8 @@ export interface Product {
   price: number;
   discounted_price?: number;
   stock?: number;
-  image: string;
+  featured_image?: { id: number; url: string } | null;
+  image?: string;
   category: any;
   isNew?: boolean;
   isBestseller?: boolean;

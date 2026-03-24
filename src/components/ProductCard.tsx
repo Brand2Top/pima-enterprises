@@ -1,4 +1,4 @@
-import { ShoppingBag, Heart } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
@@ -81,12 +81,7 @@ const ProductCard = ({
             </span>
           )}
         </div>
-        {/* Quick Actions */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-          <Button size="icon" variant="secondary" className="h-9 w-9 rounded-full shadow-medium">
-            <Heart className="h-4 w-4" />
-          </Button>
-        </div>
+        {/* Quick Actions removed */}
         <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <Button className="w-full" variant="default" onClick={handleAddToCart} disabled={isOutOfStock}>
             <ShoppingBag className="mr-2 h-4 w-4" />

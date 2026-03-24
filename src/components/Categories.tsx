@@ -19,7 +19,7 @@ const Categories = () => {
   const displayCategories = apiCategories && apiCategories.length > 0
     ? apiCategories.map(c => ({
       title: c.name,
-      image: c.image || suitcaseImg,
+      image: (typeof c.image === 'string' ? c.image : c.image?.url) || suitcaseImg,
       count: c.products_count || 0
     }))
     : defaultCategories;
