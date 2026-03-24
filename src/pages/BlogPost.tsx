@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import DOMPurify from 'dompurify';
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Share2, Printer, ChevronRight, Bookmark } from "lucide-react";
 import Header from "@/components/Header";
@@ -126,14 +127,17 @@ const BlogPost = () => {
 
             {/* Post Content */}
             <div
-              className="prose prose-lg dark:prose-invert max-w-none 
+              className="prose prose-lg md:prose-xl dark:prose-invert max-w-none 
+                font-serif text-gray-800 dark:text-gray-200
                 prose-headings:font-display prose-headings:font-bold prose-headings:text-foreground 
-                prose-p:text-muted-foreground prose-p:leading-[1.8] 
+                prose-p:leading-[1.8] 
                 prose-a:text-accent prose-a:no-underline hover:prose-a:underline
                 prose-img:rounded-xl prose-img:border prose-img:border-border/50
                 prose-blockquote:border-accent prose-blockquote:bg-accent/5 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-lg prose-blockquote:font-sans prose-blockquote:italic
                 selection:bg-accent/20 animate-fade-in"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ 
+                __html: DOMPurify.sanitize(post.content) 
+              }}
             />
 
             {/* Footer Navigation */}
