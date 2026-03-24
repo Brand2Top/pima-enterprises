@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { submitCheckout } from "@/lib/api";
 
 const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
@@ -29,20 +30,41 @@ const Checkout = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate order processing
-    setTimeout(() => {
+    try {
+      const payload = {
+        customer: {
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          phone: formData.phone,
+          address: `${formData.address}, ${formData.city}, ${formData.postalCode}`,
+        },
+        items: items.map(item => ({
+          product_id: Number(item.id),
+          quantity: item.quantity
+        }))
+      };
+
+      const response = await submitCheckout(payload);
+
       clearCart();
       toast({
         title: "Order Placed Successfully!",
         description: "Thank you for your order. We will contact you shortly.",
       });
-      navigate("/");
+      navigate(`/order-success?order_id=${response?.order_id || ''}`);
+    } catch (error: any) {
+      toast({
+        title: "Failed to place order",
+        description: error.response?.data?.message || "There was an error processing your order. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   if (items.length === 0) {

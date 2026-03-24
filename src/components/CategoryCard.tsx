@@ -23,7 +23,7 @@ const CategoryCard = ({ title, image, count }: CategoryCardProps) => {
           {title}
         </h3>
         <p className="font-sans text-sm text-primary-foreground/70">
-          {count} products
+          {count} product {count > 1 ? 's' : ''}
         </p>
       </div>
       <div className="absolute inset-0 border-2 border-transparent group-hover:border-accent/50 rounded-lg transition-colors duration-300" />

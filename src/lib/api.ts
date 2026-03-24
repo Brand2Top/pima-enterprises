@@ -27,6 +27,19 @@ export interface Product {
   isBestseller?: boolean;
 }
 
+export interface CheckoutPayload {
+  customer: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+  items: Array<{
+    product_id: number;
+    quantity: number;
+  }>;
+}
+
 export const getCategories = async (): Promise<Category[]> => {
   const response = await api.get('/categories');
   return response.data?.data || response.data;
@@ -35,6 +48,11 @@ export const getCategories = async (): Promise<Category[]> => {
 export const getProducts = async (): Promise<Product[]> => {
   const response = await api.get('/products');
   return response.data?.data || response.data;
+};
+
+export const submitCheckout = async (payload: CheckoutPayload): Promise<any> => {
+  const response = await api.post('/checkout', payload);
+  return response.data;
 };
 
 export default api;
