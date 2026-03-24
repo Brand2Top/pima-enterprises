@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products as localProducts, categories as localCategories } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -35,7 +34,7 @@ const Shop = () => {
     queryFn: getProducts
   });
 
-  const allProducts = apiProducts || localProducts;
+  const allProducts = apiProducts || [];
 
   const filteredProducts = useMemo(() => {
     let filtered = allProducts;

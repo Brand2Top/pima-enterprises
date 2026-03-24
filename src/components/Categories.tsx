@@ -1,8 +1,4 @@
 import CategoryCard from "./CategoryCard";
-import briefcaseImg from "@/assets/product-briefcase.jpg";
-import suitcaseImg from "@/assets/product-suitcase.jpg";
-import laptopBagImg from "@/assets/product-laptop-bag.jpg";
-import duffleImg from "@/assets/product-duffle.jpg";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "@/lib/api";
@@ -14,15 +10,13 @@ const Categories = () => {
     queryFn: getCategories
   });
 
-  const defaultCategories = [];
-
   const displayCategories = apiCategories && apiCategories.length > 0
     ? apiCategories.map(c => ({
       title: c.name,
-      image: (typeof c.image === 'string' ? c.image : c.image?.url) || suitcaseImg,
+      image: (typeof c.image === 'string' ? c.image : c.image?.url) || "",
       count: c.products_count || 0
     }))
-    : defaultCategories;
+    : [];
 
   return (
     <section className="py-20 md:py-28 bg-background">
