@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import { products } from "@/data/products";
 import { useSettings } from "@/contexts/SettingsContext";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "@/lib/api";
 
 const FeaturedProducts = () => {
   const { settings } = useSettings();
-  const featuredProducts = products.slice(0, 6);
+  const { data: apiProducts } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts
+  });
+
+  const featuredProducts = apiProducts ? apiProducts.slice(0, 6) : [];
 
   return (
     <section id="shop" className="py-20 md:py-28 bg-secondary/30">

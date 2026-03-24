@@ -15,8 +15,25 @@ export interface Category {
   products_count?: number;
 }
 
+export interface Product {
+  id: string | number;
+  name: string;
+  price: number;
+  discounted_price?: number;
+  stock?: number;
+  image: string;
+  category: any;
+  isNew?: boolean;
+  isBestseller?: boolean;
+}
+
 export const getCategories = async (): Promise<Category[]> => {
   const response = await api.get('/categories');
+  return response.data?.data || response.data;
+};
+
+export const getProducts = async (): Promise<Product[]> => {
+  const response = await api.get('/products');
   return response.data?.data || response.data;
 };
 

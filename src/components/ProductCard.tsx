@@ -4,12 +4,14 @@ import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
-  id: string;
+  id: string | number;
   name: string;
   price: number;
   originalPrice?: number;
+  discounted_price?: number;
+  stock?: number;
   image: string;
-  category: string;
+  category: any;
   isNew?: boolean;
 }
 
@@ -18,6 +20,8 @@ const ProductCard = ({
   name,
   price,
   originalPrice,
+  discounted_price,
+  stock,
   image,
   category,
   isNew,
@@ -25,8 +29,16 @@ const ProductCard = ({
   const { addToCart } = useCart();
   const { toast } = useToast();
 
+  const isOutOfStock = stock === 0;
+  const hasDiscount = typeof discounted_price === 'number' && discounted_price > 0;
+
+  const displayPrice = hasDiscount ? discounted_price : price;
+  const displayOriginalPrice = hasDiscount ? price : originalPrice;
+  const categoryName = typeof category === 'object' && category?.name ? category.name : category;
+
   const handleAddToCart = () => {
-    addToCart({ id, name, price, image, category });
+    if (isOutOfStock) return;
+    addToCart({ id: String(id), name, price: displayPrice, image, category: categoryName });
     toast({
       title: "Added to Cart",
       description: `${name} has been added to your cart.`,
@@ -42,16 +54,28 @@ const ProductCard = ({
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {/* Badges */}
-        {isNew && (
-          <span className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-accent text-accent-foreground rounded-full">
-            New
-          </span>
-        )}
-        {originalPrice && (
-          <span className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-destructive text-destructive-foreground rounded-full">
-            Sale
-          </span>
-        )}
+        <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+          {isOutOfStock && (
+            <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-foreground text-background rounded-full">
+              Out of Stock
+            </span>
+          )}
+          {!isOutOfStock && isNew && (
+            <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-accent text-accent-foreground rounded-full">
+              New
+            </span>
+          )}
+          {!isOutOfStock && hasDiscount && (
+            <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-destructive text-destructive-foreground rounded-full">
+              Sale
+            </span>
+          )}
+          {!isOutOfStock && !hasDiscount && originalPrice && (
+            <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-destructive text-destructive-foreground rounded-full">
+              Sale
+            </span>
+          )}
+        </div>
         {/* Quick Actions */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
           <Button size="icon" variant="secondary" className="h-9 w-9 rounded-full shadow-medium">
@@ -59,26 +83,26 @@ const ProductCard = ({
           </Button>
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <Button className="w-full" variant="default" onClick={handleAddToCart}>
+          <Button className="w-full" variant="default" onClick={handleAddToCart} disabled={isOutOfStock}>
             <ShoppingBag className="mr-2 h-4 w-4" />
-            Add to Cart
+            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
           </Button>
         </div>
       </div>
       <div>
         <p className="font-sans text-xs uppercase tracking-wider text-muted-foreground mb-1">
-          {category}
+          {categoryName}
         </p>
         <h3 className="font-sans font-medium text-foreground mb-2 group-hover:text-accent transition-colors">
           {name}
         </h3>
         <div className="flex items-center gap-2">
           <span className="font-sans font-semibold text-foreground">
-            PKR {price.toLocaleString()}
+            PKR {displayPrice?.toLocaleString()}
           </span>
-          {originalPrice && (
+          {displayOriginalPrice && (
             <span className="font-sans text-sm text-muted-foreground line-through">
-              PKR {originalPrice.toLocaleString()}
+              PKR {displayOriginalPrice?.toLocaleString()}
             </span>
           )}
         </div>

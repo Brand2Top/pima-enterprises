@@ -3,11 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products, categories as localCategories } from "@/data/products";
+import { products as localProducts, categories as localCategories } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { getCategories } from "@/lib/api";
+import { getCategories, getProducts } from "@/lib/api";
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,19 +30,29 @@ const Shop = () => {
     ? apiCategories.map(c => c.name)
     : [];
 
+  const { data: apiProducts } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts
+  });
+
+  const allProducts = apiProducts || localProducts;
+
   const filteredProducts = useMemo(() => {
-    let filtered = products;
+    let filtered = allProducts;
 
     if (showBestsellers) {
       filtered = filtered.filter((p) => p.isBestseller);
     }
 
     if (selectedCategory) {
-      filtered = filtered.filter((p) => p.category === selectedCategory);
+      filtered = filtered.filter((p) => {
+        const catName = typeof p.category === 'object' && p.category?.name ? p.category.name : p.category;
+        return catName === selectedCategory;
+      });
     }
 
     return filtered;
-  }, [selectedCategory, showBestsellers]);
+  }, [selectedCategory, showBestsellers, allProducts]);
 
   const handleCategoryChange = (category: string | null) => {
     setSelectedCategory(category);
